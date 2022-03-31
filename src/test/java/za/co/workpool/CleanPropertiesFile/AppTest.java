@@ -1,7 +1,6 @@
 package za.co.workpool.CleanPropertiesFile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.ArrayList; 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -59,18 +58,14 @@ public class AppTest
 	
 	@Test
 	void testDupEntriesMatchCase() {
-		Set<String> allValidationFails = new HashSet<>();
-		allValidationFails.addAll(App.duplicateEntriesMatchCase(properties));
-		
-		allValidationFails.forEach(String -> System.out.println(String));
+		Map<String,Integer> dups = App.duplicateEntriesMatchCase(properties);
+		System.out.println(dups);
 	}
 	
 	@Test
 	void testDupEntriesIgnoreCase() {
-		Set<String> allValidationFails = new HashSet<>();
-		allValidationFails.addAll(App.duplicateEntriesIgnoreCase(properties));
-		
-		allValidationFails.forEach(String -> System.out.println(String));
+		Map<String,Integer> dups = App.duplicateEntriesIgnoreCase(properties);
+		System.out.println(dups);
 	}
 	
 	@Test
@@ -87,18 +82,14 @@ public class AppTest
 	
 	@Test
 	void testDupValuesMatchCase() {
-		Set<String> allValidationFails = new HashSet<>();
-		allValidationFails.addAll(App.duplicateValuesMatchCase(properties));
-		
-		allValidationFails.forEach(String -> System.out.println(String));
+		Map<String,Integer> allValidationFails = App.duplicateValuesMatchCase(properties);
+		System.out.println(allValidationFails);
 	}
 	
 	@Test
 	void testDupValuesIgnoreCase() {
-		List<String> allValidationFails = new ArrayList<>();
-		allValidationFails.addAll(App.duplicateValuesIgnoreCase(properties));
-		
-		allValidationFails.forEach(String -> System.out.println(String));
+		Map<String,Integer> allValidationFails = App.duplicateValuesIgnoreCase(properties);
+		System.out.println(allValidationFails);
 	}
 	
 	@Test
@@ -112,7 +103,15 @@ public class AppTest
 	@Test
 	void testCasesOnKeys() {
 		List<String> allValidationFails = new ArrayList<>();
-		allValidationFails.addAll(App.casesOnKeys(properties));
+		allValidationFails.addAll(App.casesOnValidKeys(properties));
+		
+		allValidationFails.forEach(String -> System.out.println(String));
+	}
+	
+	@Test
+	void testCasesOnInvalidKeys() {
+		List<String> allValidationFails = new ArrayList<>();
+		allValidationFails.addAll(App.casesOnInvalidKeys(properties));
 		
 		allValidationFails.forEach(String -> System.out.println(String));
 	}
@@ -170,7 +169,15 @@ public class AppTest
 		List<Integer> allValidationFails = new ArrayList<>();
 		allValidationFails.addAll(App.EmptyLines());
 		
-		System.out.println("Empty at lines:");
+		System.out.println("Empty at:");
+		allValidationFails.forEach(String -> System.out.println(String));
+	}
+	
+	@Test
+	void testFullStops() {
+		List<String> allValidationFails = new ArrayList<>();
+		allValidationFails.addAll(App.fullStops(properties));
+		
 		allValidationFails.forEach(String -> System.out.println(String));
 	}
 	

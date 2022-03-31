@@ -25,31 +25,33 @@ public class App
     	System.out.println(checkEqualSign(testing));
     }
     
-    public static List<String> duplicateEntriesMatchCase(List<String> properties) {
+    public static Map<String,Integer> duplicateEntriesMatchCase(List<String> properties) {
     	Set<String> keyList = new HashSet<String>();
-    	List<String> dups = new ArrayList<String>();
+    	Map<String,Integer> dups= new HashMap<String,Integer>();
     	
     	for(String property:properties) {
     			if(!keyList.contains(property)) {
     				keyList.add(property);
-    			} else {
-    				dups.add(property);
-    			}
+    			} else if(!dups.containsKey(property)){
+    				dups.put(property, 2);
+    			} else 
+    				dups.merge(property, 1, Integer::sum);
     	}
     	return dups;
     }
     
-    public static List<String> duplicateEntriesIgnoreCase(List<String> properties) {
+    public static Map<String,Integer> duplicateEntriesIgnoreCase(List<String> properties) {
     	Set<String> keyList = new HashSet<String>();
-    	List<String> dups = new ArrayList<String>();
+    	Map<String,Integer> dups = new HashMap<String,Integer>();
     	
     	for(String property:properties) {
     		property=property.toLowerCase();
     			if(!keyList.contains(property)) {
     				keyList.add(property);
-    			} else {
-    				dups.add(property);
-    			}
+    			} else if(!dups.containsKey(property)){
+    				dups.put(property, 2);
+    			} else 
+    				dups.merge(property, 1, Integer::sum);
     	}
     	return dups;
     }
@@ -91,9 +93,9 @@ public class App
     	return dups;
     }
     
-    public static List<String> duplicateValuesMatchCase(List<String> properties) {
+    public static Map<String,Integer> duplicateValuesMatchCase(List<String> properties) {
     	Set<String> keyList = new HashSet<String>();
-    	List<String> dups = new ArrayList<String>();
+    	Map<String,Integer> dups = new HashMap<String,Integer>();
     	
     	for(String property:properties) {
     		if(property.contains("=")) {
@@ -101,40 +103,66 @@ public class App
 	    		if(key.length==2) {
 	    			if(!keyList.contains(key[1])) {
 	    				keyList.add(key[1]);
-	    			} else {
-	    				dups.add(property);
-	    			}
+	    			} else if(!dups.containsKey(key[0])){
+	    				dups.put(key[1], 2);
+	    			} else 
+	    				dups.merge(key[1], 1, Integer::sum);
     			}
     		}
     	}
     	return dups;
     }
     
-    public static List<String> duplicateValuesIgnoreCase(List<String> properties) {
+    public static Map<String,Integer> duplicateValuesIgnoreCase(List<String> properties) {
     	Set<String> keyList = new HashSet<String>();
-    	List<String> dups = new ArrayList<String>();
+    	Map<String,Integer> dups = new HashMap<String,Integer>();
     	
     	for(String property:properties) {
+    		property=property.toLowerCase();
     		if(property.contains("=")) {
     			String[] key = property.split("=");
 	    		if(key.length==2) {
 	    			if(!keyList.contains(key[1])) {
 	    				keyList.add(key[1]);
-	    			} else {
-	    				dups.add(property);
-	    			}
+	    			} else if(!dups.containsKey(key[0])){
+	    				dups.put(key[1], 2);
+	    			} else 
+	    				dups.merge(key[1], 1, Integer::sum);
     			}
     		}
     	}
     	return dups;
     }
     
-    public static List<String> casesOnKeys(List<String> properties) {
+    public static List<String> casesOnValidKeys(List<String> properties) {
     	List<String> valFails = new ArrayList<String>();
     	Pattern p = Pattern.compile("[A-Z]");
         Matcher m;
     	for(String property:properties) {
     		if(property.contains("=")) {
+    			String[] key = property.split("=");
+    			m = p.matcher(key[0]);
+    			if(m.find()) {
+    				valFails.add(property);
+    			}
+    		}
+    	}
+    	return valFails;
+    }
+    
+    public static List<String> casesOnInvalidKeys(List<String> properties) {
+    	List<String> valFails = new ArrayList<String>();
+    	Pattern p = Pattern.compile("[A-Z]");
+        Matcher m;
+    	for(String property:properties) {
+    		if(property.contains("=")) {
+    			String[] key = property.split("=");
+    			m = p.matcher(key[0]);
+    			if(m.find()) {
+    				valFails.add(property);
+    			}
+    		}
+    		else if(property.contains(":")) {
     			String[] key = property.split("=");
     			m = p.matcher(key[0]);
     			if(m.find()) {
